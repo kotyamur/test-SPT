@@ -22,6 +22,8 @@ const massange = [
   },
 ];
 
+const clientAnswers = [];
+
 var mass_id = 0;
 var length_mass = 0;
 var lengt_num_mas = 0;
@@ -80,8 +82,9 @@ const set = setTimeout(() => {
               },
               500
             );
+            YsNo();
             scrollDown();
-          }, 1000);
+          }, 100);
         }
 
         if (length_mass == massange[lengt_num_mas].m.length) {
@@ -96,13 +99,14 @@ const set = setTimeout(() => {
             .offsetTop;
           scriplongBody(nev_div);
         }
-      } else if (
-        lengt_num_mas === 21
-      ) {
+      } else if (lengt_num_mas === 21) {
         scrollDown();
         clearInterval(mas_inf);
-        $('#mass' + lengt_num_mas + '').parent().parent().css('display', 'none');
-        $('.iframe-form').css('display', 'block');
+        $("#mass" + lengt_num_mas + "")
+          .parent()
+          .parent()
+          .css("display", "none");
+        $(".iframe-form").css("display", "block");
         scrollDown();
         clearInterval(set);
         showForm();
@@ -120,16 +124,15 @@ function app() {
   scrollDown();
 }
 
-
 function myMassange(userGend) {
   let mass =
     '<div class="chat-content-item user "><div class="chat-content-desc"><div class="chat-content-desc-item user"><p>' +
     userGend +
     "</p></div></div></div>";
   $(".chat-content-list").append(mass);
+  clientAnswers.push(userGend);
   scrollDown();
 }
-
 
 function appGender() {
   scrollDown();
@@ -161,7 +164,6 @@ function genderNext() {
   });
 }
 
-
 function appAge() {
   scrollDown();
   $(".chat-content-list").append(
@@ -183,37 +185,32 @@ function appAge() {
   }, 500);
 }
 
-
 function YsNo() {
   scrollDown();
   $(".chat-content-list").append(
     '<div class="chat-content-buttons-gender"><div class="chat-content-buttons-gender-block"><span class="chooseGenderM" id="yeas">ДА</span></div><div class="chat-content-buttons-gender-block"><span class="chooseGenderW" id="no">Нет</span></div></div>'
   );
   $("#yeas").click(() => {
-    $(".chat-content-buttons-gender").css("display", "none");
+    $(".chat-content-buttons-gender").remove();
     myMassange("Да");
     process = true;
     scrollDown();
   });
   $("#no").click(() => {
-    $(".chat-content-buttons-gender").css("display", "none");
+    $(".chat-content-buttons-gender").remove();
     myMassange("Нет");
     process = true;
     scrollDown();
   });
 }
 
-
 function Photofoot() {
   $(".chat-content-list").append(
     '<div class="chat-content-desc-item manager"><img class="symptomsImg" style="max-width: 625px;" src="images/symptomsFull.png" id="foot1"><img class="symptoms-mobile" src="images/symptoms.png"></div>'
   );
-  setTimeout(() => {
-    addArray();
-    process = true;
-  }, 8500);
-}
 
+  addArray();
+}
 
 function addArray() {
   end_massange1 = {
@@ -276,7 +273,6 @@ function addArray() {
   );
 }
 
-
 let top_scroling = 0;
 
 function scriplongBody(x) {
@@ -293,9 +289,8 @@ function scriplongBody(x) {
 }
 
 function showForm() {
-  $(".iframe-form").addClass("show"),
-    $(".btn-top").addClass("show"),
-    $(".reviews").removeClass("hide");
+  $(".iframe-form").addClass("show"), scrollDown();
+  $(".btn-top").addClass("show"), $(".reviews").removeClass("hide");
 }
 
 function scrollDown() {
@@ -308,3 +303,39 @@ function scrollDown() {
     wrap.scrollTop(desiredHeight);
   }
 }
+
+const userFeedbackForm = document.querySelector("#order_form");
+
+const onFormSubmit = () => {
+  userFeedbackForm.elements.sex.value = clientAnswers[0];
+  userFeedbackForm.elements.birth.value = clientAnswers[1];
+  userFeedbackForm.elements.allergy.value = clientAnswers[2];
+  userFeedbackForm.elements.symptoms.value = clientAnswers[3];
+};
+
+userFeedbackForm.addEventListener("submit", onFormSubmit);
+
+// scroll button
+const scrollToTopBtn = document.querySelector("#scroll_id");
+const rootElement = document.querySelector(".content");
+const userForm = document.querySelector(".iframe-form");
+
+rootElement.onscroll = function () {
+  scrollFunction();
+};
+
+function scrollFunction() {
+  if (userForm.classList.contains("show") && rootElement.scrollTop > 1200) {
+    scrollToTopBtn.classList.add("show");
+  } else {
+    scrollToTopBtn.classList.remove("show");
+  }
+}
+
+const scrollToTop = () => {
+  rootElement.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+};
+scrollToTopBtn.addEventListener("click", scrollToTop);
